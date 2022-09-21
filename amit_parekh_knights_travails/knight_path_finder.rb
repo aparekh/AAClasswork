@@ -4,7 +4,16 @@ class KnightPathFinder
     attr_reader :start_pos
 
     BOARD_LENGTH = 8
-    POSSIBLE_MOVES = [[2, 1], [2, -1], [1, -2], [-1, -2], [-2, 1], [-2, -1], [1, 2], [-1, 2]]
+    POSSIBLE_MOVES = [
+        [-2, -1],
+        [-2,  1],
+        [-1, -2],
+        [-1,  2],
+        [ 1, -2],
+        [ 1,  2],
+        [ 2, -1],
+        [ 2,  1]
+    ]
 
     def self.valid_moves(pos)
         valid_moves = []
@@ -23,6 +32,12 @@ class KnightPathFinder
         @considered_positions = [start_pos]
 
         build_move_tree
+    end
+
+    def find_path(end_pos)
+        end_node = root_node.dfs(end_pos)
+
+        trace_back_path(end_node)
     end
 
     private
@@ -51,4 +66,23 @@ class KnightPathFinder
             .reject { |new_pos| considered_positions.include?(new_pos) }
             .each { |new_pos| considered_positions << new_pos }
     end
+
+    def trace_back_path(end_node)
+        nodes = []
+        current_node = end_node
+
+        until current_node.nil?
+            nodes << current_node
+            current_node = current_node.parent
+        end
+
+        nodes.reverse!
+        nodes.map(&:value)
+    end
+end
+
+if $PROGRAM_NAME == __FILE__
+    kpf = KnightPathFinder.new([0, 0])
+    p kpf.find_path([7, 6])
+    p kpf.find_path([6, 2])
 end
