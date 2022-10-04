@@ -22,7 +22,7 @@ end
 class Manager < Employee
     attr_reader :employees
 
-    def initialize(name, title, salary, boss)
+    def initialize(name, title, salary, boss = nil)
         super(name, title, salary, boss)
         @employees = []
     end
@@ -46,7 +46,7 @@ class Manager < Employee
             if employee.is_a?(Manager)
                 total_subsalary += employee.salary + employee.total_subsalary
             else
-                total_subsalary = employee.salary
+                total_subsalary += employee.salary
             end
         end
 
@@ -54,3 +54,11 @@ class Manager < Employee
     end
 end
 
+ned = Manager.new("Ned", "Founder", 1000000)
+darren = Manager.new("Darren", "TA Manager", 78000, ned)
+shawna = Employee.new("Shawna", "TA", 12000, darren)
+david = Employee.new("David", "Founder", 10000, darren)
+
+p ned.bonus(5)
+p darren.bonus(4)
+p david.bonus(3)
